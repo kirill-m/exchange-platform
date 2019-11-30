@@ -1,0 +1,3 @@
+rootProject.name = 'exchange-platform'
+
+include "backend", "frontend"
