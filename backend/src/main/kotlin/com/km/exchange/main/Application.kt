@@ -1,7 +1,10 @@
-package com.km.exchange
+package com.km.exchange.main
 
 import com.google.gson.Gson
 import com.km.exchange.db.ExchangeDatabase
+import com.km.exchange.model.RpcData
+import com.km.exchange.route.index
+import com.km.exchange.util.hashKey
 import io.ktor.locations.Locations
 //import org.jetbrains.ktor.application.Application
 //import org.jetbrains.ktor.application.call
@@ -20,18 +23,21 @@ import io.ktor.locations.Locations
 //import org.jetbrains.ktor.transform.transform
 
 import io.ktor.application.*
+import io.ktor.content.TextContent
 import io.ktor.features.*
-import io.ktor.html.*
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.locations.*
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.*
 import io.ktor.sessions.*
 
 data class Session(val userId: String)
 
+@KtorExperimentalLocationsAPI
 fun Application.main() {
-//    val storage = ExchangeDatabase(/*JDBCConnection.Companion.create(H2Dialect, pool)*/)
+    val storage = ExchangeDatabase(/*JDBCConnection.Companion.create(H2Dialect, pool)*/)
 
     install(DefaultHeaders)
     install(CallLogging)
@@ -53,7 +59,7 @@ fun Application.main() {
 //    }
 
     routing {
-//        index(storage)
+        index(storage)
 //        postThought(storage, ::hash)
 //        delete(storage, ::hash)
 //        userPage(storage)
