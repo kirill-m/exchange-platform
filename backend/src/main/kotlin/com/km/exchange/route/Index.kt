@@ -15,7 +15,7 @@ import io.ktor.routing.contentType
 fun Route.index(storage: ExchangeStorage) {
     get<Index> {
         call.respondHtmlTemplate(AppPage()) {
-            caption { +"Exchange" }
+            caption { +"Exchanger" }
         }
     }
 

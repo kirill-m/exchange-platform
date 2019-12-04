@@ -1,11 +1,13 @@
 package org.jetbrains.demo.thinkter
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.html.*
 import kotlinx.html.js.*
 import org.jetbrains.demo.thinkter.model.*
 import react.*
 import react.dom.*
-import kotlinx.coroutines.experimental.launch
 
 class NavBarComponent : ReactDOMComponent<NavBarComponent.NavBarHandlerProps, NavBarComponent.NavBarState>() {
 
@@ -18,7 +20,7 @@ class NavBarComponent : ReactDOMComponent<NavBarComponent.NavBarHandlerProps, Na
     override fun componentDidMount() {
         props.poller?.let { p ->
             p.listeners.add(pollerHandler)
-            p.start()
+            //p.start()
         }
 
         super.componentDidMount()
@@ -41,7 +43,7 @@ class NavBarComponent : ReactDOMComponent<NavBarComponent.NavBarHandlerProps, Na
             }
 
             navItem(timelineText) {
-                props.poller?.start()
+                //props.poller?.start()
                 timeline()
                 setState {
                     this.newMessages = Polling.NewMessages.None
@@ -49,7 +51,7 @@ class NavBarComponent : ReactDOMComponent<NavBarComponent.NavBarHandlerProps, Na
             }
 
             if (user != null) {
-                navItem("New thought") {
+                navItem("New sale") {
                     postNew()
                 }
                 navItem("Sign out, ${user.displayName.takeIf(String::isNotBlank) ?: user.userId}") {
@@ -85,7 +87,7 @@ class NavBarComponent : ReactDOMComponent<NavBarComponent.NavBarHandlerProps, Na
     }
 
     private fun logout() {
-        launch {
+        CoroutineScope(Dispatchers.Default).launch {
             logoutUser()
             props.logoutHandler()
         }

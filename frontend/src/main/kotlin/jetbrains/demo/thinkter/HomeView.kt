@@ -4,7 +4,7 @@ import kotlinx.html.*
 import org.jetbrains.demo.thinkter.model.*
 import react.*
 import react.dom.*
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.*
 
 class HomeView : ReactDOMComponent<HomeView.Props, HomeView.State>() {
     companion object : ReactComponentSpec<HomeView, Props, State>
@@ -27,7 +27,7 @@ class HomeView : ReactDOMComponent<HomeView.Props, HomeView.State>() {
 
     override fun ReactDOMBuilder.render() {
         div {
-            h2 { +"Thoughts" }
+            h2 { +"Sales" }
 
             if (state.loading) {
                 p { +"Loading..." }
@@ -48,9 +48,9 @@ class HomeView : ReactDOMComponent<HomeView.Props, HomeView.State>() {
     }
 
     private fun loadHome() {
-        launch {
+        CoroutineScope(Dispatchers.Default).launch {
             val r = index()
-            props.polling.start()
+            //props.polling.start()
             setState {
                 loading = false
                 top = r.top

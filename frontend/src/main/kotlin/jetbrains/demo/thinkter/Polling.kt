@@ -1,10 +1,12 @@
 package org.jetbrains.demo.thinkter
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlin.browser.*
 import kotlin.js.*
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.launch
 
-class Polling(val period: Int = 20000) {
+class Polling(val period: Int = 60000) {
     private var timerId = 0
     var lastTime: Long = Date().getTime().toLong()
     var listeners: MutableList<(NewMessages) -> Unit> = ArrayList()
@@ -27,7 +29,7 @@ class Polling(val period: Int = 20000) {
     }
 
     fun tick() {
-        launch {
+        CoroutineScope(Dispatchers.Default).launch {
             val newMessagesText = pollFromLastTime(lastTime.toString())
             val newMessages = when {
                 newMessagesText == "0" || newMessagesText.isBlank() -> NewMessages.None

@@ -6,7 +6,7 @@ import org.jetbrains.demo.thinkter.model.*
 import react.*
 import react.dom.*
 import kotlin.browser.*
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.*
 
 fun main(args: Array<String>) {
     runtime.wrappers.require("pure-blog.css")
@@ -20,6 +20,7 @@ fun main(args: Array<String>) {
 
 class Application : ReactDOMComponent<ReactComponentNoProps, ApplicationPageState>() {
     companion object : ReactComponentSpec<Application, ReactComponentNoProps, ApplicationPageState>
+
     val polling = Polling()
 
     init {
@@ -73,7 +74,8 @@ class Application : ReactDOMComponent<ReactComponentNoProps, ApplicationPageStat
                         showThought = { t -> onShowThought(t) }
                         replyTo = state.replyTo
                     }
-                    MainView.User -> {}
+                    MainView.User -> {
+                    }
                     MainView.Sale -> ViewThoughtComponent {
                         thought = state.currentThought ?: Thought(0, "?", "?", "?", null)
                         currentUser = state.currentUser
@@ -135,12 +137,14 @@ class Application : ReactDOMComponent<ReactComponentNoProps, ApplicationPageStat
     }
 
     private fun checkUserSession() {
-        async {
-            val user = checkSession()
-            onUserAssigned(user)
-        }.catch {
-            setState {
-                selected = MainView.Home
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val user = checkSession()
+                onUserAssigned(user)
+            } catch (e: Exception) {
+                setState {
+                    selected = org.jetbrains.demo.thinkter.MainView.Home
+                }
             }
         }
     }
@@ -156,7 +160,13 @@ enum class MainView {
     Home
 }
 
-class ApplicationPageState(var selected: MainView, var currentUser: User? = null, var currentThought: Thought? = null, var replyTo: Thought? = null) : RState
+class ApplicationPageState(
+    var selected: MainView,
+    var currentUser: User? = null,
+    var currentThought: Thought? = null,
+    var replyTo: Thought? = null
+) : RState
+
 class UserProps : RProps() {
     var userAssigned: (User) -> Unit = {}
 }

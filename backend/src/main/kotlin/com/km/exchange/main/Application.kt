@@ -1,40 +1,29 @@
 package com.km.exchange.main
 
-import com.google.gson.Gson
 import com.km.exchange.db.ExchangeDatabase
-import com.km.exchange.model.RpcData
 import com.km.exchange.route.index
+import com.km.exchange.route.login
+import com.km.exchange.util.hash
 import com.km.exchange.util.hashKey
-import io.ktor.locations.Locations
-//import org.jetbrains.ktor.application.Application
-//import org.jetbrains.ktor.application.call
-//import org.jetbrains.ktor.application.install
-//import org.jetbrains.ktor.content.TextContent
-////import org.jetbrains.ktor.features.*
-//import org.jetbrains.ktor.http.ContentType
-//import org.jetbrains.ktor.http.HttpStatusCode
-//import io.ktor.locations.*
-//import org.jetbrains.ktor.logging.CallLogging
-//import org.jetbrains.ktor.routing.routing
-//import org.jetbrains.ktor.sessions.SessionCookieTransformerMessageAuthentication
-//import org.jetbrains.ktor.sessions.SessionCookiesSettings
-//import org.jetbrains.ktor.sessions.withCookieByValue
-//import org.jetbrains.ktor.sessions.withSessions
-//import org.jetbrains.ktor.transform.transform
-
-import io.ktor.application.*
-import io.ktor.content.TextContent
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
 import io.ktor.features.*
-import io.ktor.http.ContentType
+import io.ktor.gson.gson
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.locations.Locations
 import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.*
-import io.ktor.sessions.*
+import io.ktor.routing.routing
+import io.ktor.sessions.SessionTransportTransformerMessageAuthentication
+import io.ktor.sessions.Sessions
+import io.ktor.sessions.cookie
+import io.ktor.util.KtorExperimentalAPI
+import kotlinx.coroutines.flow.combineTransform
 
 data class Session(val userId: String)
 
+@KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 fun Application.main() {
     val storage = ExchangeDatabase(/*JDBCConnection.Companion.create(H2Dialect, pool)*/)
@@ -53,6 +42,11 @@ fun Application.main() {
     install(StatusPages) {
         exception<NotImplementedError> { call.respond(HttpStatusCode.NotImplemented) }
     }
+    install(ContentNegotiation) {
+        gson {
+
+        }
+    }
 
 //    transform.register<RpcData> {
 //        TextContent(Gson().toJson(it), ContentType.Application.Json)
@@ -65,7 +59,7 @@ fun Application.main() {
 //        userPage(storage)
 //        viewThought(storage, ::hash)
 //
-//        login(storage, ::hash)
+        login(storage, ::hash)
 //        register(storage, ::hash)
     }
 }

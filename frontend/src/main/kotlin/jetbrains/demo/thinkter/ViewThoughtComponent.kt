@@ -1,5 +1,7 @@
 package org.jetbrains.demo.thinkter
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.html.*
 import kotlinx.html.js.*
 import org.jetbrains.demo.thinkter.model.*
@@ -7,7 +9,7 @@ import react.*
 import react.dom.*
 import runtime.wrappers.*
 import kotlin.browser.*
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.launch
 
 class ViewThoughtComponent : ReactDOMComponent<ViewThoughtComponent.Props, ReactComponentNoState>() {
 
@@ -69,8 +71,8 @@ class ViewThoughtComponent : ReactDOMComponent<ViewThoughtComponent.Props, React
     }
 
     private fun delete() {
-        if (window.confirm("Do you want to delete the thought?")) {
-            launch {
+        if (window.confirm("Do you want to delete the sale?")) {
+            CoroutineScope(Dispatchers.Default).launch {
                 val token = postThoughtPrepare()
                 deleteThought(props.thought.id, token.date, token.code)
                 props.leave

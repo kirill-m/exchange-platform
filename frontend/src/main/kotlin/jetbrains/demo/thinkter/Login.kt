@@ -1,13 +1,19 @@
 package org.jetbrains.demo.thinkter
 
+import kotlinx.coroutines.*
 import kotlinx.html.*
-import kotlinx.html.js.*
-import org.jetbrains.common.*
-import org.jetbrains.demo.thinkter.model.*
-import react.*
-import react.dom.*
-import kotlin.browser.*
-import kotlinx.coroutines.experimental.async
+import kotlinx.html.js.onChangeFunction
+import kotlinx.html.js.onClickFunction
+import org.jetbrains.common.inputValue
+import org.jetbrains.demo.thinkter.model.User
+import react.RState
+import react.ReactComponentSpec
+import react.dom.ReactDOMBuilder
+import react.dom.ReactDOMComponent
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
+import kotlin.js.Promise
 
 class LoginComponent : ReactDOMComponent<UserProps, LoginFormState>() {
     companion object : ReactComponentSpec<LoginComponent, UserProps, LoginFormState>
@@ -69,10 +75,14 @@ class LoginComponent : ReactDOMComponent<UserProps, LoginFormState>() {
         setState {
             disabled = true
         }
-        async {
-            val user = login(state.login, state.password)
-            loggedIn(user)
-        }.catch { err -> loginFailed(err) }
+        GlobalScope.launch {
+            try {
+                val user = login(state.login, state.password)
+                loggedIn(user)
+            } catch (e: Throwable) {
+                loginFailed(e)
+            }
+        }
     }
 
     private fun loggedIn(user: User) {

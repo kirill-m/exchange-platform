@@ -42,7 +42,7 @@ class ThoughtsListComponent : ReactDOMComponent<ThoughtsListComponent.Props, Rea
         div {
             ul {
                 if (props.thoughts.isEmpty()) {
-                    li { +"There are no thoughts yet" }
+                    li { +"There are no sales yet" }
                 } else {
                     for (t in props.thoughts) {
                         thoughtLi(t)
