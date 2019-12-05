@@ -20,7 +20,7 @@ class NavBarComponent : ReactDOMComponent<NavBarComponent.NavBarHandlerProps, Na
     override fun componentDidMount() {
         props.poller?.let { p ->
             p.listeners.add(pollerHandler)
-            //p.start()
+            p.start()
         }
 
         super.componentDidMount()
@@ -43,7 +43,7 @@ class NavBarComponent : ReactDOMComponent<NavBarComponent.NavBarHandlerProps, Na
             }
 
             navItem(timelineText) {
-                //props.poller?.start()
+                props.poller?.start()
                 timeline()
                 setState {
                     this.newMessages = Polling.NewMessages.None

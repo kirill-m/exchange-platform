@@ -6,7 +6,7 @@ import kotlin.browser.*
 import kotlin.js.*
 import kotlinx.coroutines.launch
 
-class Polling(val period: Int = 60000) {
+class Polling(private val period: Int = 60000) {
     private var timerId = 0
     var lastTime: Long = Date().getTime().toLong()
     var listeners: MutableList<(NewMessages) -> Unit> = ArrayList()

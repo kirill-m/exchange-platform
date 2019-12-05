@@ -50,7 +50,7 @@ class HomeView : ReactDOMComponent<HomeView.Props, HomeView.State>() {
     private fun loadHome() {
         CoroutineScope(Dispatchers.Default).launch {
             val r = index()
-            //props.polling.start()
+            props.polling.start()
             setState {
                 loading = false
                 top = r.top

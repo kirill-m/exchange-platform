@@ -1,8 +1,11 @@
 package com.km.exchange.main
 
 import com.km.exchange.db.ExchangeDatabase
+import com.km.exchange.dto.SaleTable
+import com.km.exchange.dto.UserTable
 import com.km.exchange.route.index
 import com.km.exchange.route.login
+import com.km.exchange.route.register
 import com.km.exchange.util.hash
 import com.km.exchange.util.hashKey
 import io.ktor.application.Application
@@ -19,7 +22,7 @@ import io.ktor.sessions.SessionTransportTransformerMessageAuthentication
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
 import io.ktor.util.KtorExperimentalAPI
-import kotlinx.coroutines.flow.combineTransform
+import org.jetbrains.squash.connection.transaction
 
 data class Session(val userId: String)
 
@@ -27,6 +30,7 @@ data class Session(val userId: String)
 @KtorExperimentalLocationsAPI
 fun Application.main() {
     val storage = ExchangeDatabase(/*JDBCConnection.Companion.create(H2Dialect, pool)*/)
+    storage.connection.transaction { databaseSchema().create(listOf(SaleTable, UserTable)) }
 
     install(DefaultHeaders)
     install(CallLogging)
@@ -60,6 +64,6 @@ fun Application.main() {
 //        viewThought(storage, ::hash)
 //
         login(storage, ::hash)
-//        register(storage, ::hash)
+        register(storage, ::hash)
     }
 }

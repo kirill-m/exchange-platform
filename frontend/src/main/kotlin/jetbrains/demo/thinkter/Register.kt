@@ -1,8 +1,6 @@
 package org.jetbrains.demo.thinkter
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.html.*
 import kotlinx.html.js.*
 import org.jetbrains.common.*
@@ -10,7 +8,6 @@ import org.jetbrains.demo.thinkter.model.*
 import react.*
 import react.dom.*
 import kotlin.browser.*
-import kotlinx.coroutines.launch
 
 
 class RegisterComponent : ReactDOMComponent<UserProps, RegisterFormState>() {
@@ -97,13 +94,13 @@ class RegisterComponent : ReactDOMComponent<UserProps, RegisterFormState>() {
         setState {
             disabled = true
         }
-        CoroutineScope(Dispatchers.Default).launch {
+        GlobalScope.launch {
             try {
                 with(state) {
                     val user = register(login, password, displayName, email)
                     registered(user)
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 registrationFailed(e)
             }
         }

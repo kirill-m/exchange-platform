@@ -101,6 +101,8 @@ suspend fun <T> requestAndParseResult(method: String, url: String, body: dynamic
         override var headers: dynamic = json("Accept" to "application/json")
     }).await()
 
+    console.log("TEST1")
     val await = response.json().await()
+    console.log("TEST1")
     return parse(await)
 }

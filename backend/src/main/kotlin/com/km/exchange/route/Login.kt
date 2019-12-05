@@ -8,16 +8,16 @@ import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.get
 import io.ktor.locations.post
+import io.ktor.request.receiveParameters
 import io.ktor.response.respond
-import io.ktor.response.respondRedirect
 import io.ktor.routing.Route
 import io.ktor.sessions.*
-import org.eclipse.jetty.http.HttpStatus
 
 fun Route.login(storage: ExchangeStorage, hash: (String) -> String) {
     get<Login> {
         val user = call.sessions.get<Session>()?.let {
-            storage.user(it.userId) }
+            storage.getById(it.userId)
+        }
         if (user == null) {
             call.respond(HttpStatusCode.Forbidden)
         } else {
@@ -26,19 +26,23 @@ fun Route.login(storage: ExchangeStorage, hash: (String) -> String) {
     }
 
     post<Login> {
-        val login = //storage.user(it.userId, hash(it.password))
-            when {
-            it.userId.length < 4 -> null
-//            it.password.length < 6 -> null
-//            !userNameValid(it.userId) -> null
-            else -> storage.user(it.userId, hash(it.password))
+        val params = call.receiveParameters()
+        val userId = params["userId"]
+        val password = params["password"]
+        /* TODO: validate on client */
+        val user = when {
+            userId == null || password == null -> null
+            userId.length < 4 -> null
+            password.length < 6 -> null
+            !userNameValid(userId) -> null
+            else -> storage.getById(userId, hash(password))
         }
 
-        if (login == null) {
+        if (user == null) {
             call.respond(LoginResponse(error = "Invalid name or password"))
         } else {
-            call.sessions.set(Session(login.userId))
-            call.respond(LoginResponse(login))
+            call.sessions.set(Session(user.userId))
+            call.respond(LoginResponse(user))
         }
     }
 
