@@ -1,5 +1,8 @@
 package org.jetbrains.demo.thinkter.model
 
+import jetbrains.demo.thinkter.model.Thought
+import jetbrains.demo.thinkter.model.User
+
 interface RpcData
 
 data class IndexResponse(val top: List<Thought>, val latest: List<Thought>) : RpcData

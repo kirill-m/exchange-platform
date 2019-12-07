@@ -1,5 +1,5 @@
 web:
-  image: kirillm15/exchange-platform_web
+  build: frontend
   container_name: web
   ports:
     - 8080:8080
@@ -8,7 +8,7 @@ web:
     - backend
 
 backend:
-  image: kirillm15/exchange-platform_backend
+  build: backend
   container_name: backend
   ports:
     - 9090:9090

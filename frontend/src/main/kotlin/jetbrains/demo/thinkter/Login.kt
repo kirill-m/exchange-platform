@@ -1,19 +1,15 @@
 package org.jetbrains.demo.thinkter
 
+import jetbrains.demo.thinkter.model.User
 import kotlinx.coroutines.*
 import kotlinx.html.*
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import org.jetbrains.common.inputValue
-import org.jetbrains.demo.thinkter.model.User
 import react.RState
 import react.ReactComponentSpec
 import react.dom.ReactDOMBuilder
 import react.dom.ReactDOMComponent
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
-import kotlin.js.Promise
 
 class LoginComponent : ReactDOMComponent<UserProps, LoginFormState>() {
     companion object : ReactComponentSpec<LoginComponent, UserProps, LoginFormState>

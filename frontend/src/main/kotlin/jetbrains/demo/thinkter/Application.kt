@@ -1,5 +1,7 @@
 package org.jetbrains.demo.thinkter
 
+import jetbrains.demo.thinkter.model.Thought
+import jetbrains.demo.thinkter.model.User
 import kotlinx.html.*
 import kotlinx.html.js.*
 import org.jetbrains.demo.thinkter.model.*

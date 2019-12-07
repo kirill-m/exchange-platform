@@ -1,5 +1,7 @@
 package org.jetbrains.demo.thinkter
 
+import jetbrains.demo.thinkter.model.Thought
+import jetbrains.demo.thinkter.model.User
 import kotlinx.coroutines.await
 import org.jetbrains.demo.thinkter.model.*
 import org.w3c.dom.url.*
