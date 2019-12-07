@@ -1,0 +1,15 @@
+web:
+  build: frontend
+  container_name: web
+  ports:
+    - 8080:8080
+  restart: always
+  links:
+    - backend
+
+backend:
+  build: backend
+  container_name: backend
+  ports:
+    - 9090:9090
+

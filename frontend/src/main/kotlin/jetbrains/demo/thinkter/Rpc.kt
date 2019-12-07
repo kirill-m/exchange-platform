@@ -32,11 +32,11 @@ suspend fun login(userId: String, password: String): User =
         append("password", password)
     }, ::parseLoginOrRegisterResponse)
 
-suspend fun postThoughtPrepare(): PostThoughtToken =
-    getAndParseResult("/post-new", null, ::parseNewPostTokenResponse)
+suspend fun postSalePrepare(): PostThoughtToken =
+    getAndParseResult("/sale/create", null, ::parseNewPostTokenResponse)
 
-suspend fun postThought(replyTo: Int?, text: String, token: PostThoughtToken): Thought =
-    postAndParseResult("/post-new", URLSearchParams().apply {
+suspend fun postSale(replyTo: Int?, text: String, token: PostThoughtToken): Thought =
+    postAndParseResult("/sale/create", URLSearchParams().apply {
         append("text", text)
         append("date", token.date.toString())
         append("code", token.code)
@@ -52,8 +52,8 @@ suspend fun logoutUser() {
     }).await()
 }
 
-suspend fun deleteThought(id: Int, date: Long, code: String) =
-    postAndParseResult("/thought/$id/delete", URLSearchParams().apply {
+suspend fun deleteSale(id: Int, date: Long, code: String) =
+    postAndParseResult("/sale/$id/delete", URLSearchParams().apply {
         append("date", date.toString())
         append("code", code)
     }, { Unit })

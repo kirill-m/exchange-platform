@@ -1,8 +1,6 @@
 package org.jetbrains.demo.thinkter
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.GlobalScope
 import kotlinx.html.*
 import kotlinx.html.js.*
 import org.jetbrains.common.*
@@ -22,7 +20,7 @@ class NewThoughtComponent : ReactDOMComponent<NewThoughtComponent.Props, NewThou
         form(classes = "pure-form pure-form-stacked") {
             legend {
                 if (props.replyTo == null) {
-                    +"New thought"
+                    +"New sale"
                 } else {
                     +"Reply"
                 }
@@ -35,7 +33,7 @@ class NewThoughtComponent : ReactDOMComponent<NewThoughtComponent.Props, NewThou
             }
 
             textArea(classes = "pure-input-1-2") {
-                placeholder = "Your thought..."
+                placeholder = "Description..."
 
                 onChangeFunction = {
                     setState {
@@ -53,17 +51,17 @@ class NewThoughtComponent : ReactDOMComponent<NewThoughtComponent.Props, NewThou
 
                 onClickFunction = {
                     it.preventDefault()
-                    doPostThought()
+                    doPostSale()
                 }
             }
         }
     }
 
-    private fun doPostThought() {
-        CoroutineScope(Dispatchers.Default).launch {
+    private fun doPostSale() {
+        GlobalScope.launch {
             try {
-                val token = postThoughtPrepare()
-                val thought = postThought(props.replyTo?.id, state.text, token)
+                val token = postSalePrepare()
+                val thought = postSale(props.replyTo?.id, state.text, token)
                 onSubmitted(thought)
             } catch (e: Exception) {
                 onFailed(e)

@@ -58,11 +58,11 @@ fun Application.main() {
 
     routing {
         index(storage)
-//        postThought(storage, ::hash)
+//        postSale(storage, ::hash)
 //        delete(storage, ::hash)
 //        userPage(storage)
-//        viewThought(storage, ::hash)
-//
+//        viewSale(storage, ::hash)
+
         login(storage, ::hash)
         register(storage, ::hash)
     }

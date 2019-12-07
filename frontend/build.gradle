@@ -35,6 +35,10 @@ task assembleWeb(type: Sync) {
 
 assemble.dependsOn assembleWeb
 
+clean.doFirst {
+    delete "${projectDir}/web"
+}
+
 kotlinFrontend {
 // uncomment this to specify exact nodejs version (bundle will be downloaded)
 //    downloadNodeJsVersion = "8.7.0"

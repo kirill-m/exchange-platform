@@ -36,15 +36,15 @@ class NavBarComponent : ReactDOMComponent<NavBarComponent.NavBarHandlerProps, Na
         val newMessages = state.newMessages
 
         ul(classes = "nav-list") {
-            val timelineText = "Timeline" + when (newMessages) {
+            val salesText = "Sales" + when (newMessages) {
                 Polling.NewMessages.None -> ""
                 is Polling.NewMessages.Few -> "(${newMessages.n})"
                 is Polling.NewMessages.MoreThan -> "(${newMessages.n}+"
             }
 
-            navItem(timelineText) {
+            navItem(salesText) {
                 props.poller?.start()
-                timeline()
+                sales()
                 setState {
                     this.newMessages = Polling.NewMessages.None
                 }
@@ -74,7 +74,7 @@ class NavBarComponent : ReactDOMComponent<NavBarComponent.NavBarHandlerProps, Na
         }
     }
 
-    private fun timeline() {
+    private fun sales() {
         props.handler(MainView.Home)
     }
 

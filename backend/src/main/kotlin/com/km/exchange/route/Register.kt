@@ -42,7 +42,7 @@ fun Route.register(storage: ExchangeStorage, hash: (String) -> String) {
             } else if (userId != null &&!userNameValid(userId)) {
                 call.respond(RegisterResponse(error = "Login should be consists of digits, letters, dots or underscores"))
             } else if (userId != null && storage.getById(userId) != null) {
-                call.respond(RegisterResponse(error = "User with the following login is already registered : ${storage.getById(userId)!!.passwordHash}"))
+                call.respond(RegisterResponse(error = "User with the following login is already registered"))
             } else {
                 try {
                     val newUser = User(userId, email, displayName, hash(password))

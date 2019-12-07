@@ -73,8 +73,8 @@ class ViewThoughtComponent : ReactDOMComponent<ViewThoughtComponent.Props, React
     private fun delete() {
         if (window.confirm("Do you want to delete the sale?")) {
             CoroutineScope(Dispatchers.Default).launch {
-                val token = postThoughtPrepare()
-                deleteThought(props.thought.id, token.date, token.code)
+                val token = postSalePrepare()
+                deleteSale(props.thought.id, token.date, token.code)
                 props.leave
             }
         }

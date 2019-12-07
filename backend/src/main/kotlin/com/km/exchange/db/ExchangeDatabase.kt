@@ -1,6 +1,8 @@
 package com.km.exchange.db
 
+import com.km.exchange.dto.SaleTable
 import com.km.exchange.dto.UserTable
+import com.km.exchange.model.Sale
 import com.km.exchange.model.User
 import org.jetbrains.squash.connection.DatabaseConnection
 import org.jetbrains.squash.dialects.h2.H2Connection
@@ -11,6 +13,7 @@ import org.jetbrains.squash.expressions.eq
 import org.jetbrains.squash.query.from
 import org.jetbrains.squash.query.where
 import org.jetbrains.squash.results.get
+import org.jetbrains.squash.statements.deleteFrom
 import org.jetbrains.squash.statements.insertInto
 import org.jetbrains.squash.statements.values
 
@@ -51,4 +54,54 @@ class ExchangeDatabase(val connection: DatabaseConnection = H2Connection.createM
                 it[passwordHash] = user.passwordHash
             }.execute()
         }
+
+    override fun getSales(): List<Sale> {
+        return connection.transaction {
+            from(SaleTable)
+                .execute()
+                .mapNotNull {
+                    Sale(
+                        it[SaleTable.id],
+                        it[SaleTable.sellerId],
+                        it[SaleTable.createDate],
+                        it[SaleTable.description]
+                    )
+                }
+                .toList()
+        }
+    }
+
+    override fun getSales(userId: String): List<Sale> {
+        return connection.transaction {
+            from(SaleTable)
+                .where(SaleTable.sellerId eq userId)
+                .execute()
+                .mapNotNull {
+                    Sale(
+                        it[SaleTable.id],
+                        it[SaleTable.sellerId],
+                        it[SaleTable.createDate],
+                        it[SaleTable.description]
+                    )
+                }
+                .toList()
+        }
+    }
+
+    override fun createSale(sale: Sale) {
+        connection.transaction {
+            insertInto(SaleTable).values {
+                it[id] = sale.saleId
+                it[sellerId] = sale.sellerId
+                it[createDate] = sale.createDate
+                it[description] = sale.description
+            }.execute()
+        }
+    }
+
+    override fun deleteSale(saleId: Long) {
+        connection.transaction {
+            deleteFrom(SaleTable).where(SaleTable.id eq saleId).execute()
+        }
+    }
 }
