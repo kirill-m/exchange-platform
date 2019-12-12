@@ -5,6 +5,8 @@ import com.km.exchange.main.Session
 import com.km.exchange.model.LoginResponse
 import com.km.exchange.model.RegisterResponse
 import com.km.exchange.model.User
+import com.km.exchange.notification.EmailNotification
+import com.km.exchange.notification.NotificationService
 import com.km.exchange.util.userNameValid
 import io.ktor.application.application
 import io.ktor.application.call
@@ -18,9 +20,12 @@ import io.ktor.response.respondRedirect
 import io.ktor.sessions.get
 import io.ktor.sessions.sessions
 import io.ktor.sessions.set
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import javax.mail.MessagingException
 
-fun Route.register(storage: ExchangeStorage, hash: (String) -> String) {
-    post<Register> { _ ->
+fun Route.register(storage: ExchangeStorage, hash: (String) -> String, notificationService: NotificationService) {
+    post<Register> {
         val user = call.sessions.get<Session>()?.let { storage.getById(it.userId) }
 
         val params = call.receiveParameters()
@@ -47,9 +52,16 @@ fun Route.register(storage: ExchangeStorage, hash: (String) -> String) {
                 try {
                     val newUser = User(userId, email, displayName, hash(password))
                     storage.createUser(newUser)
+                    GlobalScope.async {
+                        notificationService.sendNotification(EmailNotification(email, title = "Thanks for registration",
+                            body = "Thank you for registration on Exchanger Platform!"))
+                    }
                     call.sessions.set(Session(newUser.userId))
                     call.respond(LoginResponse(newUser))
+                } catch (e: MessagingException) {
+                    call.respond(LoginResponse(error = "Could not send message to email ${email}. Cause: ${e.cause}"))
                 } catch (e: Throwable) {
+                    application.environment.log.error("Error caught: ", e)
                     if (storage.getById(userId) != null) {
                         call.respond(LoginResponse(error = "User with the following login is already registered"))
                     } else if (storage.userByEmail(email) != null) {

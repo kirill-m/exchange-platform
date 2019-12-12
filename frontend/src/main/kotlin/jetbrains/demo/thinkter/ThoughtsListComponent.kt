@@ -1,9 +1,8 @@
 package org.jetbrains.demo.thinkter
 
-import jetbrains.demo.thinkter.model.Thought
+import jetbrains.demo.thinkter.model.Sale
 import kotlinx.html.*
 import kotlinx.html.js.*
-import org.jetbrains.demo.thinkter.model.*
 import react.*
 import react.dom.*
 
@@ -15,7 +14,7 @@ class ThoughtsListComponent : ReactDOMComponent<ThoughtsListComponent.Props, Rea
     }
 
     override fun ReactDOMBuilder.render() {
-        fun UL.thoughtLi(t: Thought) {
+        fun UL.thoughtLi(t: Sale) {
             li {
                 section(classes = "post") {
                     header(classes = "post-header") {
@@ -53,5 +52,5 @@ class ThoughtsListComponent : ReactDOMComponent<ThoughtsListComponent.Props, Rea
         }
     }
 
-    class Props(var thoughts: List<Thought> = emptyList(), var show: (Thought) -> Unit = {}) : RProps()
+    class Props(var thoughts: List<Sale> = emptyList(), var show: (Sale) -> Unit = {}) : RProps()
 }

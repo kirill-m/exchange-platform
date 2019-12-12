@@ -1,18 +1,17 @@
 package org.jetbrains.demo.thinkter
 
-import jetbrains.demo.thinkter.model.Thought
+import jetbrains.demo.thinkter.model.Sale
 import jetbrains.demo.thinkter.model.User
 import kotlinx.coroutines.GlobalScope
 import kotlinx.html.*
 import kotlinx.html.js.*
 import org.jetbrains.common.*
-import org.jetbrains.demo.thinkter.model.*
 import react.*
 import react.dom.*
 import kotlinx.coroutines.launch
 
-class NewThoughtComponent : ReactDOMComponent<NewThoughtComponent.Props, NewThoughtComponent.State>() {
-    companion object : ReactComponentSpec<NewThoughtComponent, Props, State>
+class NewSaleComponent : ReactDOMComponent<NewSaleComponent.Props, NewSaleComponent.State>() {
+    companion object : ReactComponentSpec<NewSaleComponent, Props, State>
 
     init {
         state = State()
@@ -49,34 +48,33 @@ class NewThoughtComponent : ReactDOMComponent<NewThoughtComponent.Props, NewThou
             }
 
             button(classes = "pure-button pure-button-primary") {
-                +"Post"
+                +"Create"
 
                 onClickFunction = {
                     it.preventDefault()
-                    doPostSale()
+                    doCreateSale()
                 }
             }
         }
     }
 
-    private fun doPostSale() {
+    private fun doCreateSale() {
         GlobalScope.launch {
             try {
-                val token = postSalePrepare()
-                val thought = postSale(props.replyTo?.id, state.text, token)
-                onSubmitted(thought)
+                val token = createSalePrepare()
+                onSubmitted(createSale(props.replyTo?.id, state.text, token))
             } catch (e: Exception) {
                 onFailed(e)
             }
         }
     }
 
-    private fun onSubmitted(thought: Thought) {
+    private fun onSubmitted(sale: Sale) {
         setState {
             errorMessage = null
         }
 
-        props.showThought(thought)
+        props.showThought(sale)
     }
 
     private fun onFailed(err: Throwable) {
@@ -86,6 +84,6 @@ class NewThoughtComponent : ReactDOMComponent<NewThoughtComponent.Props, NewThou
     }
 
     class State(var text: String = "", var errorMessage: String? = null) : RState
-    class Props(var replyTo: Thought? = null, var replyToUser: User? = null, var showThought: (Thought) -> Unit = {}) :
+    class Props(var replyTo: Sale? = null, var replyToUser: User? = null, var showThought: (Sale) -> Unit = {}) :
         RProps()
 }

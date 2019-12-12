@@ -118,7 +118,6 @@ class RegisterComponent : ReactDOMComponent<UserProps, RegisterFormState>() {
                 disabled = false
             }
         } else {
-            console.log("Registration failed", err)
             setState {
                 errorMessage = "Registration failed"
             }

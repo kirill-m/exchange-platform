@@ -1,6 +1,6 @@
 package org.jetbrains.demo.thinkter
 
-import jetbrains.demo.thinkter.model.Thought
+import jetbrains.demo.thinkter.model.Sale
 import jetbrains.demo.thinkter.model.User
 import kotlinx.coroutines.await
 import org.jetbrains.demo.thinkter.model.*
@@ -34,18 +34,18 @@ suspend fun login(userId: String, password: String): User =
         append("password", password)
     }, ::parseLoginOrRegisterResponse)
 
-suspend fun postSalePrepare(): PostThoughtToken =
+suspend fun createSalePrepare(): CreateSaleToken =
     getAndParseResult("/sale/create", null, ::parseNewPostTokenResponse)
 
-suspend fun postSale(replyTo: Int?, text: String, token: PostThoughtToken): Thought =
+suspend fun createSale(replyTo: Int?, text: String, token: CreateSaleToken): Sale =
     postAndParseResult("/sale/create", URLSearchParams().apply {
-        append("text", text)
+        append("description", text)
         append("date", token.date.toString())
         append("code", token.code)
         if (replyTo != null) {
             append("replyTo", replyTo.toString())
         }
-    }, ::parsePostThoughtResponse)
+    }, ::parseCreateSaleResponse)
 
 suspend fun logoutUser() {
     window.fetch("/logout", object : RequestInit {
@@ -64,19 +64,19 @@ private fun parseIndexResponse(json: dynamic): IndexResponse {
     val top = json.top as Array<dynamic>
     val latest = json.latest as Array<dynamic>
 
-    return IndexResponse(top.map(::parseThought), latest.map(::parseThought))
+    return IndexResponse(top.map(::parseSale), latest.map(::parseSale))
 }
 
-private fun parsePostThoughtResponse(json: dynamic): Thought {
-    return parseThought(json.thought)
+private fun parseCreateSaleResponse(json: dynamic): Sale {
+    return parseSale(json.sale)
 }
 
-private fun parseThought(json: dynamic): Thought {
-    return Thought(json.id, json.userId, json.text, json.date, json.replyTo)
+private fun parseSale(json: dynamic): Sale {
+    return Sale(0, json.sellerId, json.description, json.createDate, 0)
 }
 
-private fun parseNewPostTokenResponse(json: dynamic): PostThoughtToken {
-    return PostThoughtToken(json.user, json.date, json.code)
+private fun parseNewPostTokenResponse(json: dynamic): CreateSaleToken {
+    return CreateSaleToken(json.user, json.date, json.code)
 }
 
 private fun parseLoginOrRegisterResponse(json: dynamic): User {

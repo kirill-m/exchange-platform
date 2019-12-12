@@ -14,8 +14,10 @@ import org.jetbrains.squash.query.from
 import org.jetbrains.squash.query.where
 import org.jetbrains.squash.results.get
 import org.jetbrains.squash.statements.deleteFrom
+import org.jetbrains.squash.statements.fetch
 import org.jetbrains.squash.statements.insertInto
 import org.jetbrains.squash.statements.values
+import java.time.LocalDateTime
 
 class ExchangeDatabase(val connection: DatabaseConnection = H2Connection.createMemoryConnection()) : ExchangeStorage {
     constructor(dir: File) : this(H2Connection.create("jdbc:h2:file:${dir.canonicalFile.absolutePath}"))
@@ -61,10 +63,9 @@ class ExchangeDatabase(val connection: DatabaseConnection = H2Connection.createM
                 .execute()
                 .mapNotNull {
                     Sale(
-                        it[SaleTable.id],
                         it[SaleTable.sellerId],
-                        it[SaleTable.createDate],
-                        it[SaleTable.description]
+                        it[SaleTable.description],
+                        it[SaleTable.createDate].toString()
                     )
                 }
                 .toList()
@@ -78,28 +79,26 @@ class ExchangeDatabase(val connection: DatabaseConnection = H2Connection.createM
                 .execute()
                 .mapNotNull {
                     Sale(
-                        it[SaleTable.id],
                         it[SaleTable.sellerId],
-                        it[SaleTable.createDate],
-                        it[SaleTable.description]
+                        it[SaleTable.description],
+                        it[SaleTable.createDate].toString()
                     )
                 }
                 .toList()
         }
     }
 
-    override fun createSale(sale: Sale) {
-        connection.transaction {
+    override fun createSale(sale: Sale, createDateTime: LocalDateTime): Int {
+        return connection.transaction {
             insertInto(SaleTable).values {
-                it[id] = sale.saleId
                 it[sellerId] = sale.sellerId
-                it[createDate] = sale.createDate
+                it[createDate] = createDateTime
                 it[description] = sale.description
-            }.execute()
+            }.fetch(SaleTable.id).execute()
         }
     }
 
-    override fun deleteSale(saleId: Long) {
+    override fun deleteSale(saleId: Int) {
         connection.transaction {
             deleteFrom(SaleTable).where(SaleTable.id eq saleId).execute()
         }

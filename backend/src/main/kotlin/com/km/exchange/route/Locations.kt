@@ -19,7 +19,7 @@ class Logout()
 class Sales()
 
 @Location("/sale/create")
-data class CreateSale(val userId: String = "", val description: String = "", val creationDate: LocalDateTime)
+data class CreateSale(val date: Long = 0L, val code: String = "", val description: String = "", val price: Int = 0)
 
 @Location("/sale/{id}/delete")
 data class DeleteSale(val id : Int)
@@ -27,3 +27,11 @@ data class DeleteSale(val id : Int)
 @Location("/sale/{id}")
 data class GetSale(val id : Int)
 
+@Location("/order/create")
+data class CreateOrder(val userId : String, val saleId: Int, val offeredPrice: Int)
+
+@Location("order/{id}/accept")
+data class AcceptOrder(val orderId: Int)
+
+@Location("order/{id}/decline")
+data class DeclineOrder(val orderId: Int)

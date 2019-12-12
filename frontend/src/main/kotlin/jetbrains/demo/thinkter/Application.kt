@@ -1,10 +1,9 @@
 package org.jetbrains.demo.thinkter
 
-import jetbrains.demo.thinkter.model.Thought
+import jetbrains.demo.thinkter.model.Sale
 import jetbrains.demo.thinkter.model.User
 import kotlinx.html.*
 import kotlinx.html.js.*
-import org.jetbrains.demo.thinkter.model.*
 import react.*
 import react.dom.*
 import kotlin.browser.*
@@ -72,14 +71,14 @@ class Application : ReactDOMComponent<ReactComponentNoProps, ApplicationPageStat
                     MainView.Register -> RegisterComponent {
                         userAssigned = { onUserAssigned(it) }
                     }
-                    MainView.PostSale -> NewThoughtComponent {
+                    MainView.PostSale -> NewSaleComponent {
                         showThought = { t -> onShowThought(t) }
                         replyTo = state.replyTo
                     }
                     MainView.User -> {
                     }
                     MainView.Sale -> ViewThoughtComponent {
-                        thought = state.currentThought ?: Thought(0, "?", "?", "?", null)
+                        thought = state.currentThought ?: Sale(0, "?", "?", "?", null)
                         currentUser = state.currentUser
                         reply = { onReplyTo(it) }
                         leave = { mainViewSelected() }
@@ -93,7 +92,7 @@ class Application : ReactDOMComponent<ReactComponentNoProps, ApplicationPageStat
         }
     }
 
-    private fun onReplyTo(t: Thought) {
+    private fun onReplyTo(t: Sale) {
         setState {
             replyTo = t
             selected = MainView.PostSale
@@ -112,7 +111,7 @@ class Application : ReactDOMComponent<ReactComponentNoProps, ApplicationPageStat
         }
     }
 
-    private fun onShowThought(t: Thought) {
+    private fun onShowThought(t: Sale) {
         setState {
             currentThought = t
             selected = MainView.Sale
@@ -165,8 +164,8 @@ enum class MainView {
 class ApplicationPageState(
     var selected: MainView,
     var currentUser: User? = null,
-    var currentThought: Thought? = null,
-    var replyTo: Thought? = null
+    var currentThought: Sale? = null,
+    var replyTo: Sale? = null
 ) : RState
 
 class UserProps : RProps() {

@@ -30,7 +30,6 @@ class UtilitiesKtTest {
     @Test
     fun testHash(): Unit {
         val hash1 = hash("123456")
-
         storage.connection.transaction {
             storage.createUser(User("userId", "a@mail.ru", "Name", hash1))
         }
@@ -38,7 +37,6 @@ class UtilitiesKtTest {
         val user1 = storage.connection.transaction {
             storage.getById("userId")
         }
-
         val user2 = storage.connection.transaction {
             storage.getById("userId", hash("123456"))
         }
@@ -60,14 +58,15 @@ class UtilitiesKtTest {
     fun testDeleteSale(): Unit {
         val user1 = User("userId0", "a@mail.ru", "Name Fname0", hash("123456"))
 
-        val sale1 = Sale(111L, "userId0", LocalDateTime.now().minusDays(3), "Some description0")
+        val createDate = LocalDateTime.now().minusDays(3)
+        val sale1 = Sale("userId0", "Some description0", createDate.toString())
 
         storage.createUser(user1)
-        storage.createSale(sale1)
+        val saleId = storage.createSale(sale1, createDate)
         val sales = storage.getSales("userId0")
         assertEquals(1, sales.size)
 
-        storage.deleteSale(111L)
+        storage.deleteSale(saleId)
 
         val result = storage.getSales("userId0")
         assertTrue { result.isEmpty() }
@@ -79,16 +78,17 @@ class UtilitiesKtTest {
         val user2 = User("userId1", "b@mail.ru", "Name Fname1", hash("32rfdfdfdf"))
         val user3 = User("userId2", "c@mail.ru", "Name Fname2", hash("12345fff6"))
 
-        val sale1 = Sale(111L, "userId0", LocalDateTime.now().minusDays(3), "Some description0")
-        val sale2 = Sale(112L, "userId1", LocalDateTime.now().minusDays(2), "Some description1")
-        val sale3 = Sale(113L, "userId2", LocalDateTime.now().minusDays(1), "Some description2")
+        val now = LocalDateTime.now()
+        val sale1 = Sale("userId0", "Some description0", now.minusDays(3).toString())
+        val sale2 = Sale("userId1", "Some description1", now.minusDays(2).toString())
+        val sale3 = Sale("userId2", "Some description2", now.minusDays(1).toString())
 
         storage.createUser(user1)
         storage.createUser(user2)
         storage.createUser(user3)
-        storage.createSale(sale1)
-        storage.createSale(sale2)
-        storage.createSale(sale3)
+        storage.createSale(sale1, now.minusDays(3))
+        storage.createSale(sale2, now.minusDays(2))
+        storage.createSale(sale3, now.minusDays(1))
 
         val sales = storage.getSales()
 
@@ -106,16 +106,17 @@ class UtilitiesKtTest {
     fun testGetUserSales(): Unit {
         val user1 = User("userId1", "a@mail.ru", "Name Fname1", hash("123456"))
         val user2 = User("userId2", "b@mail.ru", "Name Fname2", hash("4gfgf"))
-        val sale1 = Sale(111L, "userId1", LocalDateTime.now().minusDays(3), "Some description0")
-        val sale2 = Sale(112L, "userId1", LocalDateTime.now().minusDays(2), "Some description1")
-        val sale3 = Sale(113L, "userId2", LocalDateTime.now().minusDays(1), "Some description2")
+        val now = LocalDateTime.now()
+        val sale1 = Sale("userId1", "Some description0", now.minusDays(3).toString())
+        val sale2 = Sale("userId1", "Some description1", now.minusDays(2).toString())
+        val sale3 = Sale("userId2", "Some description2", now.minusDays(1).toString())
 
         storage.createUser(user1)
         storage.createUser(user2)
 
-        storage.createSale(sale1)
-        storage.createSale(sale2)
-        storage.createSale(sale3)
+        storage.createSale(sale1, now.minusDays(3))
+        storage.createSale(sale2, now.minusDays(2))
+        storage.createSale(sale3, now.minusDays(1))
 
         val sales1 = storage.getSales("userId1")
         val sales2= storage.getSales("userId2")

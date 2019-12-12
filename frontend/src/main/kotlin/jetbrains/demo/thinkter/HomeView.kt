@@ -1,8 +1,7 @@
 package org.jetbrains.demo.thinkter
 
-import jetbrains.demo.thinkter.model.Thought
+import jetbrains.demo.thinkter.model.Sale
 import kotlinx.html.*
-import org.jetbrains.demo.thinkter.model.*
 import react.*
 import react.dom.*
 import kotlinx.coroutines.*
@@ -70,6 +69,6 @@ class HomeView : ReactDOMComponent<HomeView.Props, HomeView.State>() {
         }
     }
 
-    class State(var top: List<Thought>, var latest: List<Thought>, var loading: Boolean, var newMessages: Polling.NewMessages) : RState
-    class Props(var polling: Polling, var showThought: (Thought) -> Unit = {}) : RProps()
+    class State(var top: List<Sale>, var latest: List<Sale>, var loading: Boolean, var newMessages: Polling.NewMessages) : RState
+    class Props(var polling: Polling, var showThought: (Sale) -> Unit = {}) : RProps()
 }

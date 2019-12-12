@@ -34,7 +34,7 @@ fun Route.index(storage: ExchangeStorage) {
 
             call.response.pipeline.intercept(ApplicationSendPipeline.After) {
                 val etagString =
-                    user?.userId + "," + latest.createDate + "," + latest.saleId//top.joinToString { it.id.toString() } + latest.joinToString { it.id.toString() }
+                    user?.userId + "," + latest.createDate//top.joinToString { it.id.toString() } + latest.joinToString { it.id.toString() }
                 call.response.etag(etagString)
             }
         }
