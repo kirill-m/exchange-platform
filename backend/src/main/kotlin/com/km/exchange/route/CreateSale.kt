@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 
 fun Route.createSale(storage: ExchangeStorage, hash: (String) -> String) {
     get<CreateSale> {
-        val user = call.sessions.get<Session>()?.let { storage.getById(it.userId) }
+        val user = call.sessions.get<Session>()?.let { storage.getUserById(it.userId) }
 
         if (user == null) {
             call.respond(HttpStatusCode.Forbidden)
@@ -32,7 +32,7 @@ fun Route.createSale(storage: ExchangeStorage, hash: (String) -> String) {
     }
 
     post<CreateSale> {
-        val user = call.sessions.get<Session>()?.let { session -> storage.getById(session.userId) }
+        val user = call.sessions.get<Session>()?.let { session -> storage.getUserById(session.userId) }
 
         val params = call.receiveParameters()
         val date = params["date"]
@@ -46,9 +46,9 @@ fun Route.createSale(storage: ExchangeStorage, hash: (String) -> String) {
             call.respond(HttpStatusCode.Forbidden)
         } else {
             val createDate = LocalDateTime.now()
-            val sale = Sale(user.userId, description, createDate.toString())
-            storage.createSale(sale, createDate)
-            call.respond(CreateSaleResponse(sale))
+            val sale = Sale(sellerId = user.userId, description = description, createDate = createDate.toString())
+            val saleId = storage.createSale(sale, createDate)
+            call.respond(CreateSaleResponse(storage.getSale(saleId)))
         }
     }
 }

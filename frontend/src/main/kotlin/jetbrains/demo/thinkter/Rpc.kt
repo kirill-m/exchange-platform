@@ -64,6 +64,8 @@ private fun parseIndexResponse(json: dynamic): IndexResponse {
     val top = json.top as Array<dynamic>
     val latest = json.latest as Array<dynamic>
 
+    console.log("List of sales size: ${top.size}")
+
     return IndexResponse(top.map(::parseSale), latest.map(::parseSale))
 }
 
@@ -72,7 +74,7 @@ private fun parseCreateSaleResponse(json: dynamic): Sale {
 }
 
 private fun parseSale(json: dynamic): Sale {
-    return Sale(0, json.sellerId, json.description, json.createDate, 0)
+    return Sale(json.id, json.sellerId, json.description, json.createDate, 0)
 }
 
 private fun parseNewPostTokenResponse(json: dynamic): CreateSaleToken {
@@ -103,8 +105,8 @@ suspend fun <T> requestAndParseResult(method: String, url: String, body: dynamic
         override var headers: dynamic = json("Accept" to "application/json")
     }).await()
 
-    console.log("TEST1")
+    console.log("$method $url")
     val await = response.json().await()
-    console.log("TEST1")
+    console.log("after rq")
     return parse(await)
 }

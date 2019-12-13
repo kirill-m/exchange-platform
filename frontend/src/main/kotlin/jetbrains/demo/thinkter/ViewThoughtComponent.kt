@@ -2,8 +2,7 @@ package org.jetbrains.demo.thinkter
 
 import jetbrains.demo.thinkter.model.Sale
 import jetbrains.demo.thinkter.model.User
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.html.*
 import kotlinx.html.js.*
 import react.*
@@ -50,7 +49,7 @@ class ViewThoughtComponent : ReactDOMComponent<ViewThoughtComponent.Props, React
                         +"Delete"
 
                         onClickFunction = {
-                            delete()
+                            deleteSale()
                         }
                     }
 
@@ -71,12 +70,12 @@ class ViewThoughtComponent : ReactDOMComponent<ViewThoughtComponent.Props, React
         }
     }
 
-    private fun delete() {
+    private fun deleteSale() {
         if (window.confirm("Do you want to delete the sale?")) {
-            CoroutineScope(Dispatchers.Default).launch {
+            GlobalScope.launch {
                 val token = createSalePrepare()
                 deleteSale(props.thought.id, token.date, token.code)
-                props.leave
+                props.leave()
             }
         }
     }

@@ -13,6 +13,7 @@ import org.jetbrains.squash.expressions.eq
 import org.jetbrains.squash.query.from
 import org.jetbrains.squash.query.where
 import org.jetbrains.squash.results.get
+import org.jetbrains.squash.schema.create
 import org.jetbrains.squash.statements.deleteFrom
 import org.jetbrains.squash.statements.fetch
 import org.jetbrains.squash.statements.insertInto
@@ -22,8 +23,14 @@ import java.time.LocalDateTime
 class ExchangeDatabase(val connection: DatabaseConnection = H2Connection.createMemoryConnection()) : ExchangeStorage {
     constructor(dir: File) : this(H2Connection.create("jdbc:h2:file:${dir.canonicalFile.absolutePath}"))
 
+    init {
+        connection.transaction {
+            databaseSchema().create(listOf(SaleTable, UserTable))
+        }
+    }
+
     @KtorExperimentalAPI
-    override fun getById(userId: String, hashedPassword: String?): User? =
+    override fun getUserById(userId: String, hashedPassword: String?): User? =
         connection.transaction {
             from(UserTable)
                 .where { UserTable.id eq userId }
@@ -63,6 +70,7 @@ class ExchangeDatabase(val connection: DatabaseConnection = H2Connection.createM
                 .execute()
                 .mapNotNull {
                     Sale(
+                        it[SaleTable.id],
                         it[SaleTable.sellerId],
                         it[SaleTable.description],
                         it[SaleTable.createDate].toString()
@@ -79,12 +87,28 @@ class ExchangeDatabase(val connection: DatabaseConnection = H2Connection.createM
                 .execute()
                 .mapNotNull {
                     Sale(
+                        it[SaleTable.id],
                         it[SaleTable.sellerId],
                         it[SaleTable.description],
                         it[SaleTable.createDate].toString()
                     )
                 }
                 .toList()
+        }
+    }
+
+    override fun getSale(id: Int): Sale {
+        return connection.transaction {
+            from(SaleTable).where(SaleTable.id eq id)
+                .execute()
+                .mapNotNull {
+                    Sale(
+                        it[SaleTable.id],
+                        it[SaleTable.sellerId],
+                        it[SaleTable.description],
+                        it[SaleTable.createDate].toString()
+                    )
+                }.single()
         }
     }
 

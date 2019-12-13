@@ -26,7 +26,7 @@ import javax.mail.MessagingException
 
 fun Route.register(storage: ExchangeStorage, hash: (String) -> String, notificationService: NotificationService) {
     post<Register> {
-        val user = call.sessions.get<Session>()?.let { storage.getById(it.userId) }
+        val user = call.sessions.get<Session>()?.let { storage.getUserById(it.userId) }
 
         val params = call.receiveParameters()
         val userId = params["userId"]
@@ -46,7 +46,7 @@ fun Route.register(storage: ExchangeStorage, hash: (String) -> String, notificat
                 call.respond(RegisterResponse(error = "Login should be at least 4 characters long"))
             } else if (userId != null &&!userNameValid(userId)) {
                 call.respond(RegisterResponse(error = "Login should be consists of digits, letters, dots or underscores"))
-            } else if (userId != null && storage.getById(userId) != null) {
+            } else if (userId != null && storage.getUserById(userId) != null) {
                 call.respond(RegisterResponse(error = "User with the following login is already registered"))
             } else {
                 try {
@@ -62,7 +62,7 @@ fun Route.register(storage: ExchangeStorage, hash: (String) -> String, notificat
                     call.respond(LoginResponse(error = "Could not send message to email ${email}. Cause: ${e.cause}"))
                 } catch (e: Throwable) {
                     application.environment.log.error("Error caught: ", e)
-                    if (storage.getById(userId) != null) {
+                    if (storage.getUserById(userId) != null) {
                         call.respond(LoginResponse(error = "User with the following login is already registered"))
                     } else if (storage.userByEmail(email) != null) {
                         call.respond(LoginResponse(error = "User with  email ${email} is already registered"))

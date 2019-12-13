@@ -48,7 +48,7 @@ class HomeView : ReactDOMComponent<HomeView.Props, HomeView.State>() {
     }
 
     private fun loadHome() {
-        CoroutineScope(Dispatchers.Default).launch {
+        GlobalScope.launch {
             val r = index()
             props.polling.start()
             setState {

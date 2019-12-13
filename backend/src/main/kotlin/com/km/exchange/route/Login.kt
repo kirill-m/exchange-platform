@@ -16,7 +16,7 @@ import io.ktor.sessions.*
 fun Route.login(storage: ExchangeStorage, hash: (String) -> String) {
     get<Login> {
         val user = call.sessions.get<Session>()?.let {
-            storage.getById(it.userId)
+            storage.getUserById(it.userId)
         }
         if (user == null) {
             call.respond(HttpStatusCode.Forbidden)
@@ -35,7 +35,7 @@ fun Route.login(storage: ExchangeStorage, hash: (String) -> String) {
             userId.length < 4 -> null
             password.length < 6 -> null
             !userNameValid(userId) -> null
-            else -> storage.getById(userId, hash(password))
+            else -> storage.getUserById(userId, hash(password))
         }
 
         if (user == null) {

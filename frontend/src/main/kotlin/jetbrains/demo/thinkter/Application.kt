@@ -138,7 +138,7 @@ class Application : ReactDOMComponent<ReactComponentNoProps, ApplicationPageStat
     }
 
     private fun checkUserSession() {
-        CoroutineScope(Dispatchers.Default).launch {
+        GlobalScope.launch {
             try {
                 val user = checkSession()
                 onUserAssigned(user)

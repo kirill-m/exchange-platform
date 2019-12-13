@@ -6,6 +6,9 @@ import java.time.LocalDateTime
 @Location("/")
 class Index()
 
+@Location("/poll")
+class Poll(val lastTime: String = "")
+
 @Location("/login")
 data class Login(val userId: String = "", val password: String = "", val error: String = "")
 
