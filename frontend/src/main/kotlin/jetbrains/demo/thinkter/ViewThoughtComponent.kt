@@ -45,11 +45,14 @@ class ViewThoughtComponent : ReactDOMComponent<ViewThoughtComponent.Props, React
                     +""
                 }
                 div(classes = "pure-u-3 pure-u-md-1-3") {
-                    a(href = "javascript:void(0)") {
-                        +"Delete"
+                    val isOwner = props.currentUser!!.userId == props.thought.userId
+                    if(isOwner) {
+                        a(href = "javascript:void(0)") {
+                            +"Delete"
 
-                        onClickFunction = {
-                            deleteSale()
+                            onClickFunction = {
+                                deleteSale()
+                            }
                         }
                     }
 
@@ -58,11 +61,13 @@ class ViewThoughtComponent : ReactDOMComponent<ViewThoughtComponent.Props, React
                         +" "
                     }
 
-                    a(href = "javascript:void(0)") {
-                        +"Reply"
+                    if (!isOwner) {
+                        a(href = "javascript:void(0)") {
+                            +"Reply"
 
-                        onClickFunction = {
-                            props.reply(props.thought)
+                            onClickFunction = {
+                                props.reply(props.thought)
+                            }
                         }
                     }
                 }

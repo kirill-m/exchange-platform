@@ -17,10 +17,6 @@ import kotlin.test.assertTrue
 class UtilitiesKtTest {
     val storage = ExchangeDatabase(/*JDBCConnection.Companion.create(H2Dialect, pool)*/)
 
-    init {
-        storage.connection.transaction { databaseSchema().create(listOf(SaleTable, UserTable)) }
-    }
-
     @AfterAll
     fun tearDown() {
         storage.connection.close()

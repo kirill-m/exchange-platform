@@ -34,17 +34,15 @@ fun Route.index(storage: ExchangeStorage) {
             val user = call.sessions.get<Session>()?.let {
                 storage.getUserById(it.userId)
             }
-//            val top = storage.top(10).map(storage::getThought)
-//            val latest = storage.latest(10).map(storage::getThought)
+
             val sales = storage.getSales()
 
             call.response.pipeline.intercept(ApplicationSendPipeline.After) {
-                val etagString =
-                    user?.userId + "," + sales.joinToString { it.id.toString() } + sales.joinToString { it.id.toString() }
+                val etagString = user?.userId + "," + sales.joinToString { it.id.toString() }
                 call.response.etag(etagString)
             }
 
-            call.respond(IndexResponse(sales, sales))
+            call.respond(IndexResponse(sales))
         }
 
         get<Poll> { poll ->

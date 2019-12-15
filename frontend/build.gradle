@@ -61,6 +61,7 @@ kotlinFrontend {
         devDependency("babel-loader")
         devDependency("babel-core")
         devDependency("karma")
+        devDependency("script-loader")
     }
 
     webpackBundle {
@@ -73,7 +74,7 @@ kotlinFrontend {
 compileKotlin2Js {
     kotlinOptions.metaInfo = true
     kotlinOptions.outputFile = "$project.buildDir.path/js/${project.name}.js"
-    kotlinOptions.moduleKind = 'amd'
+    kotlinOptions.moduleKind = 'commonjs'
     kotlinOptions.main = "call"
     kotlinOptions.sourceMap = true
     kotlinOptions.sourceMapEmbedSources = "always"

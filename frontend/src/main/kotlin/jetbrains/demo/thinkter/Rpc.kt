@@ -61,12 +61,8 @@ suspend fun deleteSale(id: Int, date: Long, code: String) =
     }, { Unit })
 
 private fun parseIndexResponse(json: dynamic): IndexResponse {
-    val top = json.top as Array<dynamic>
-    val latest = json.latest as Array<dynamic>
-
-    console.log("List of sales size: ${top.size}")
-
-    return IndexResponse(top.map(::parseSale), latest.map(::parseSale))
+    val sales = json.sales as Array<dynamic>
+    return IndexResponse(sales.map(::parseSale))
 }
 
 private fun parseCreateSaleResponse(json: dynamic): Sale {
@@ -107,6 +103,6 @@ suspend fun <T> requestAndParseResult(method: String, url: String, body: dynamic
 
     console.log("$method $url")
     val await = response.json().await()
-    console.log("after rq")
+    console.log("after rq $method $url")
     return parse(await)
 }

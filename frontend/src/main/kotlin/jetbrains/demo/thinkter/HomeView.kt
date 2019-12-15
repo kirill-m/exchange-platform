@@ -10,7 +10,7 @@ class HomeView : ReactDOMComponent<HomeView.Props, HomeView.State>() {
     companion object : ReactComponentSpec<HomeView, Props, State>
 
     init {
-        state = State(emptyList(), emptyList(), true, Polling.NewMessages.None)
+        state = State(emptyList(), true, Polling.NewMessages.None)
     }
 
     override fun componentWillMount() {
@@ -32,15 +32,9 @@ class HomeView : ReactDOMComponent<HomeView.Props, HomeView.State>() {
             if (state.loading) {
                 p { +"Loading..." }
             } else {
-                h3 { +"Top" }
+                h3 { +"Sales" }
                 ThoughtsListComponent {
-                    thoughts = state.top
-                    show = props.showThought
-                }
-
-                h3 { +"Recent" }
-                ThoughtsListComponent {
-                    thoughts = state.latest
+                    thoughts = state.sales
                     show = props.showThought
                 }
             }
@@ -53,8 +47,7 @@ class HomeView : ReactDOMComponent<HomeView.Props, HomeView.State>() {
             props.polling.start()
             setState {
                 loading = false
-                top = r.top
-                latest = r.latest
+                sales = r.sales
             }
         }
     }
@@ -69,6 +62,6 @@ class HomeView : ReactDOMComponent<HomeView.Props, HomeView.State>() {
         }
     }
 
-    class State(var top: List<Sale>, var latest: List<Sale>, var loading: Boolean, var newMessages: Polling.NewMessages) : RState
+    class State(var sales: List<Sale>, var loading: Boolean, var newMessages: Polling.NewMessages) : RState
     class Props(var polling: Polling, var showThought: (Sale) -> Unit = {}) : RProps()
 }
