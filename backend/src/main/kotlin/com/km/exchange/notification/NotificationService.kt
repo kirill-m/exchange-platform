@@ -60,7 +60,7 @@ private class EmailNotificationService {
 
 private class PushNotificationService {
     fun sendPush(notification: PushNotification) {
-        TODO("not implemented")
+        //TODO implement server push
     }
 
 }
@@ -73,6 +73,7 @@ data class EmailNotification(
 ) : Notification
 
 data class PushNotification(
+    val userId: String?,
     val title: String,
     val body: String
 ) : Notification

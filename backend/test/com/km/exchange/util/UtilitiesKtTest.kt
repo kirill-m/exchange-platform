@@ -1,8 +1,6 @@
 package com.km.exchange.util
 
 import com.km.exchange.db.ExchangeDatabase
-import com.km.exchange.dto.SaleTable
-import com.km.exchange.dto.UserTable
 import com.km.exchange.model.Sale
 import com.km.exchange.model.User
 import org.hamcrest.Matchers.*
@@ -12,10 +10,14 @@ import org.junit.Assert.assertThat
 import org.junit.Test
 import org.junit.jupiter.api.AfterAll
 import java.time.LocalDateTime
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class UtilitiesKtTest {
-    val storage = ExchangeDatabase(/*JDBCConnection.Companion.create(H2Dialect, pool)*/)
+    companion object {
+        val storage = ExchangeDatabase(/*JDBCConnection.Companion.create(H2Dialect, pool)*/)
+    }
+
 
     @AfterAll
     fun tearDown() {
@@ -25,9 +27,6 @@ class UtilitiesKtTest {
     @Test
     fun testHash(): Unit {
         val hash1 = hash("123456")
-        storage.connection.transaction {
-            storage.createUser(User("userId", "a@mail.ru", "Name", hash1))
-        }
 
         val user1 = storage.connection.transaction {
             storage.getUserById("userId")
@@ -50,8 +49,15 @@ class UtilitiesKtTest {
     }
 
     @Test
+    fun testGetUserFromEmptyTable(): Unit {
+        val result = storage.getUserById("userId")
+
+        assertNull(result)
+    }
+
+    @Test
     fun testDeleteSale(): Unit {
-        val user1 = User("userId0", "a@mail.ru", "Name Fname0", hash("123456"))
+        val user1 = User("userId0", "a1@mail.ru", "Name Fname0", hash("123456"))
 
         val createDate = LocalDateTime.now().minusDays(3)
         val sale1 = Sale(null, "userId0", "Some description0", createDate.toString())
@@ -69,14 +75,14 @@ class UtilitiesKtTest {
 
     @Test
     fun testGetAllSales(): Unit {
-        val user1 = User("userId0", "a@mail.ru", "Name Fname0", hash("123456"))
-        val user2 = User("userId1", "b@mail.ru", "Name Fname1", hash("32rfdfdfdf"))
-        val user3 = User("userId2", "c@mail.ru", "Name Fname2", hash("12345fff6"))
+        val user1 = User("userId01", "a2@mail.ru", "Name Fname0", hash("123456"))
+        val user2 = User("userId11", "b2@mail.ru", "Name Fname1", hash("32rfdfdfdf"))
+        val user3 = User("userId21", "c2@mail.ru", "Name Fname2", hash("12345fff6"))
 
         val now = LocalDateTime.now()
-        val sale1 = Sale(null, "userId0", "Some description0", now.minusDays(3).toString())
-        val sale2 = Sale(null, "userId1", "Some description1", now.minusDays(2).toString())
-        val sale3 = Sale(null, "userId2", "Some description2", now.minusDays(1).toString())
+        val sale1 = Sale(null, "userId01", "Some description0", now.minusDays(3).toString())
+        val sale2 = Sale(null, "userId11", "Some description1", now.minusDays(2).toString())
+        val sale3 = Sale(null, "userId21", "Some description2", now.minusDays(1).toString())
 
         storage.createUser(user1)
         storage.createUser(user2)
@@ -114,8 +120,8 @@ class UtilitiesKtTest {
 
     @Test
     fun testGetUserSales(): Unit {
-        val user1 = User("userId1", "a@mail.ru", "Name Fname1", hash("123456"))
-        val user2 = User("userId2", "b@mail.ru", "Name Fname2", hash("4gfgf"))
+        val user1 = User("userId1", "a3@mail.ru", "Name Fname1", hash("123456"))
+        val user2 = User("userId2", "b3@mail.ru", "Name Fname2", hash("4gfgf"))
         val now = LocalDateTime.now()
         val sale1 = Sale(null, "userId1", "Some description0", now.minusDays(3).toString())
         val sale2 = Sale(null, "userId1", "Some description1", now.minusDays(2).toString())

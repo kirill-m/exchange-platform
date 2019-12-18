@@ -40,13 +40,13 @@ fun Route.register(storage: ExchangeStorage, hash: (String) -> String, notificat
             checkNotNull(userId)
             checkNotNull(email)
             checkNotNull(password)
-            if (password != null && password.length < 6) {
+            if (password.length < 6) {
                 call.respond(RegisterResponse(error = "Password should be at least 6 characters long"))
-            } else if (userId != null && userId.length < 4) {
+            } else if (userId.length < 4) {
                 call.respond(RegisterResponse(error = "Login should be at least 4 characters long"))
-            } else if (userId != null &&!userNameValid(userId)) {
+            } else if (!userNameValid(userId)) {
                 call.respond(RegisterResponse(error = "Login should be consists of digits, letters, dots or underscores"))
-            } else if (userId != null && storage.getUserById(userId) != null) {
+            } else if (storage.getUserById(userId) != null) {
                 call.respond(RegisterResponse(error = "User with the following login is already registered"))
             } else {
                 try {

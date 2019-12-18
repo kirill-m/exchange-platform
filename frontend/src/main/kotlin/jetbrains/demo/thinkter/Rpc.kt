@@ -21,9 +21,7 @@ suspend fun register(userId: String, password: String, displayName: String, emai
     }, ::parseLoginOrRegisterResponse)
 
 suspend fun pollFromLastTime(lastTime: String = ""): String =
-    getAndParseResult<String>("/poll?lastTime=$lastTime", null, { json ->
-        json.count
-    })
+    getAndParseResult("/poll?lastTime=$lastTime", null) { it.count as String }
 
 suspend fun checkSession(): User =
     getAndParseResult("/login", null, ::parseLoginOrRegisterResponse)
@@ -58,7 +56,12 @@ suspend fun deleteSale(id: Int, date: Long, code: String) =
     postAndParseResult("/sale/$id/delete", URLSearchParams().apply {
         append("date", date.toString())
         append("code", code)
-    }, { Unit })
+    }) { Unit }
+
+suspend fun offerPrice(saleId: Int, price: Int) =
+    postAndParseResult("/sale/$saleId/offer", URLSearchParams().apply {
+        append("price", price.toString())
+    }) { Unit }
 
 private fun parseIndexResponse(json: dynamic): IndexResponse {
     val sales = json.sales as Array<dynamic>

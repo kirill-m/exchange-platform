@@ -20,7 +20,7 @@ import org.jetbrains.squash.statements.insertInto
 import org.jetbrains.squash.statements.values
 import java.time.LocalDateTime
 
-class ExchangeDatabase(val connection: DatabaseConnection = H2Connection.createMemoryConnection()) : ExchangeStorage {
+class ExchangeDatabase(val connection: DatabaseConnection = H2Connection.createMemoryConnection("test;DB_CLOSE_DELAY=-1")) : ExchangeStorage {
     constructor(dir: File) : this(H2Connection.create("jdbc:h2:file:${dir.canonicalFile.absolutePath}"))
 
     init {

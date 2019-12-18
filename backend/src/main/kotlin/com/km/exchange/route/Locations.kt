@@ -30,11 +30,14 @@ data class DeleteSale(val id : Int)
 @Location("/sale/{id}")
 data class GetSale(val id : Int)
 
+@Location("/sale/{id}/offer")
+data class OfferPrice(val id : Int)
+
 @Location("/order/create")
 data class CreateOrder(val userId : String, val saleId: Int, val offeredPrice: Int)
 
-@Location("order/{id}/accept")
+@Location("/order/{id}/accept")
 data class AcceptOrder(val orderId: Int)
 
-@Location("order/{id}/decline")
+@Location("/order/{id}/decline")
 data class DeclineOrder(val orderId: Int)

@@ -59,6 +59,7 @@ fun Application.main() {
         index(storage)
         createSale(storage, ::hash)
         deleteSale(storage, ::hash)
+        offerPrice(storage, ::hash, notificationService)
 //        userPage(storage)
 //        viewSale(storage, ::hash)
         getSales(storage, ::hash)

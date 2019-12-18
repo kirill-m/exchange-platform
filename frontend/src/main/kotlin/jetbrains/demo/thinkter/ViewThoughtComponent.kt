@@ -26,10 +26,10 @@ class ViewThoughtComponent : ReactDOMComponent<ViewThoughtComponent.Props, React
 
         div(classes = "pure-g") {
             div(classes = "pure-u-1 pure-u-md-1-3") {
-                +userId
-                props.thought.replyTo?.let { id ->
-                    +" replies to $id"
-                }
+                +"Username: $userId"
+//                props.thought.replyTo?.let { id ->
+//                    +" replies to $id"
+//                }
             }
             div(classes = "pure-u-1 pure-u-md-2-3") {
                 +date
@@ -63,10 +63,11 @@ class ViewThoughtComponent : ReactDOMComponent<ViewThoughtComponent.Props, React
 
                     if (!isOwner) {
                         a(href = "javascript:void(0)") {
-                            +"Reply"
+                            +"Offer my price"
 
                             onClickFunction = {
-                                props.reply(props.thought)
+                                offerPrice()
+                                //props.reply(props.thought)
                             }
                         }
                     }
@@ -82,6 +83,13 @@ class ViewThoughtComponent : ReactDOMComponent<ViewThoughtComponent.Props, React
                 deleteSale(props.thought.id, token.date, token.code)
                 props.leave()
             }
+        }
+    }
+
+    private fun offerPrice() {
+        GlobalScope.launch {
+            offerPrice(props.thought.id, 10)
+            props.leave()
         }
     }
 
