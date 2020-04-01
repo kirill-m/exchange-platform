@@ -1,0 +1,25 @@
+GET http://localhost:9090/sale/2
+Accept: application/json
+
+###
+GET http://localhost:9090/sale/all
+Accept: application/json
+
+###
+POST http://localhost:9090/sale/new
+Content-Type: application/json
+
+{"title" : "mytitle_1", "price": 100, "description": "mydescr"}
+
+###
+POST http://localhost:9090/sale/1
+Content-Type: application/json
+
+{"title" : "mytitle", "price": 10, "description": "mydescr_new"}
+
+###
+
+DELETE http://localhost:9090/sale/1
+Content-Type: application/json
+
+###

@@ -1,8 +1,6 @@
 package com.km.exchange.main
 
 import com.km.exchange.db.ExchangeDatabase
-import com.km.exchange.dto.SaleTable
-import com.km.exchange.dto.UserTable
 import com.km.exchange.notification.ExchangeNotificationService
 import com.km.exchange.route.*
 import com.km.exchange.util.hash
@@ -21,7 +19,6 @@ import io.ktor.sessions.SessionTransportTransformerMessageAuthentication
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
 import io.ktor.util.KtorExperimentalAPI
-import org.jetbrains.squash.connection.transaction
 
 data class Session(val userId: String)
 

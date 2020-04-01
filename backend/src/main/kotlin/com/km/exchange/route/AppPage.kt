@@ -10,7 +10,7 @@ class AppPage : Template<HTML> {
     val head = Placeholder<HEAD>()
 
     override fun HTML.apply() {
-        classes += "mdc-typography"
+        classes = classes + "mdc-typography"
         head {
             meta { charset = "utf-8" }
             meta {
