@@ -38,7 +38,6 @@ fun Route.sale(storage: SaleStorage) {
 
     post<Create> {
         val received = call.receive<Sale>()
-        println("create rq sale $received")
         val id = storage.create(received)
         call.respond(HttpStatusCode.OK, "Sale id $id")
     }
