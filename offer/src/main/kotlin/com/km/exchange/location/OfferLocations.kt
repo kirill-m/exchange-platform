@@ -24,4 +24,4 @@ data class ByUserId(val userId: Long)
 data class BySaleId(val saleId: Long)
 
 @Location("/offer/new")
-class Create()
+class Create
