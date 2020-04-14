@@ -1,10 +1,10 @@
 POST http://localhost:9090/user/new
 Content-Type: application/json
 
-{ "email":"a@mail.ru", "name":"Alex", "city":"Moscow" }
+{ "email":"m@mail.ru", "name":"Alex", "city":"Moscow" }
 
 ###
-GET http://localhost:9090/user/1
+GET http://localhost:9090/user/2
 Accept: application/json
 
 ###
@@ -12,3 +12,9 @@ POST http://localhost:9090/user/1/edit
 Content-Type: application/json
 
 { "email":"a@mail.ru", "name":"Alex Matveev", "city":"Moscow City" }
+
+###
+GET http://localhost:9090/user/1
+Accept: application/json
+
+###

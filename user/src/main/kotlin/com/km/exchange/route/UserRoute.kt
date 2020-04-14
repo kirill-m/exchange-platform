@@ -2,9 +2,12 @@ package com.km.exchange.route
 
 import com.km.exchange.location.ById
 import com.km.exchange.location.Create
+import com.km.exchange.model.Sale
 import com.km.exchange.model.User
 import com.km.exchange.storage.UserStorage
 import io.ktor.application.call
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.get
 import io.ktor.locations.post
@@ -12,9 +15,14 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
 
-fun Route.user(storage: UserStorage) {
+fun Route.user(storage: UserStorage, httpClient: HttpClient) {
     get<ById> {
-        call.respond(mapOf("user" to storage.get(it.id)))
+        val user = storage.get(it.id)
+        if (user == null) {
+            call.respond(HttpStatusCode.NotFound, "User with id ${it.id} not found")
+        }
+        val sales = httpClient.get<List<Sale>>("http://sale-service/sale/user/${it.id}")
+        call.respond(mapOf("user" to user, "sales" to sales))
     }
 
     post<ById.Edit> {

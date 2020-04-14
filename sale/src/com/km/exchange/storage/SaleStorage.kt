@@ -8,4 +8,5 @@ interface SaleStorage {
     fun delete(saleId: Long)
     fun update(saleId: Long, sale: Sale)
     fun create(sale: Sale) : Long
+    fun getByUserId(userId: Long): List<Sale>
 }

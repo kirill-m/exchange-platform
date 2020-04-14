@@ -1,6 +1,7 @@
 package com.km.exchange.route
 
 import com.km.exchange.location.ById
+import com.km.exchange.location.ByUserId
 import com.km.exchange.location.Create
 import com.km.exchange.location.GetAll
 import com.km.exchange.model.Sale
@@ -21,8 +22,12 @@ fun Route.sale(storage: SaleStorage) {
         call.respond(mapOf("sale" to storage.get(it.id)))
     }
 
+    get<ByUserId> {
+        call.respond(storage.getByUserId(it.userId))
+    }
+
     get<GetAll> {
-        call.respond(mapOf("sales" to storage.getAll()))
+        call.respond(storage.getAll())
     }
 
     post<ById> {

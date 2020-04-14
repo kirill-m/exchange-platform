@@ -8,6 +8,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 class SaleEntity(saleId: EntityID<Long>) : LongEntity(saleId) {
     companion object : LongEntityClass<SaleEntity>(SaleTable)
 
+    var userId by SaleTable.userId
     var title by SaleTable.title
     var description by SaleTable.description
     var price by SaleTable.price

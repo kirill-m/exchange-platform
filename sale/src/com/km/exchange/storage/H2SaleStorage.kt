@@ -25,19 +25,21 @@ class H2SaleStorage(
 
     override fun get(saleId: Long): Sale? {
         return transaction {
-            val saleEntity = SaleEntity.findById(saleId)
-            println("Found by saleId $saleId ${saleEntity?.title}")
-            saleEntity?.let {
-                Sale(saleEntity.title, saleEntity.price, saleEntity.description)
-            }
+            SaleEntity.findById(saleId)?.let { e -> Sale(e.userId, e.title, e.price, e.description) }
         }
     }
 
 
+    override fun getByUserId(userId: Long): List<Sale> {
+        return transaction {
+            SaleEntity.find { SaleTable.userId eq userId }.map { e -> Sale(e.userId, e.title, e.price, e.description) }
+        }
+    }
+
     override fun getAll(): List<Sale> {
         return transaction {
             val sales = SaleEntity.all()
-            sales.map { s -> Sale(s.title, s.price, s.description) }
+            sales.map { s -> Sale(s.userId, s.title, s.price, s.description) }
         }
     }
 
@@ -55,9 +57,10 @@ class H2SaleStorage(
         }
     }
 
-    override fun create(sale: Sale) : Long {
+    override fun create(sale: Sale): Long {
         val entity = transaction {
             SaleEntity.new {
+                userId = sale.userId
                 title = sale.title
                 description = sale.description
                 price = sale.price
