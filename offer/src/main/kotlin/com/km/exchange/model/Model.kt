@@ -5,7 +5,6 @@ data class PriceParams(val price: Int)
 
 enum class Status(val code: Int) {
     CREATED(0), ACCEPTED(1), CANCELED(2), DECLINED(3);
-
 }
 
 fun getByCode(code: Int) : Status {

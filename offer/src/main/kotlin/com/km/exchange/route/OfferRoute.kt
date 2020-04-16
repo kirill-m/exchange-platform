@@ -24,7 +24,6 @@ fun Route.offer(storage: OfferStorage) {
 
     post<ById.Edit> {
         val price = call.receive<PriceParams>().price
-        println("receive new price $price")
         updateOffer(call, storage, it.byId.id) { offeredPrice = price }
     }
 
@@ -41,7 +40,7 @@ fun Route.offer(storage: OfferStorage) {
     }
 
     get<ByUserId> {
-        call.respond(mapOf("offer" to storage.getByUserId(it.userId)))
+        call.respond(storage.getByUserId(it.userId))
     }
 
     get<BySaleId> {

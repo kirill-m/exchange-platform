@@ -2,6 +2,7 @@ package com.km.exchange.route
 
 import com.km.exchange.location.ById
 import com.km.exchange.location.Create
+import com.km.exchange.model.Offer
 import com.km.exchange.model.Sale
 import com.km.exchange.model.User
 import com.km.exchange.storage.UserStorage
@@ -22,7 +23,8 @@ fun Route.user(storage: UserStorage, httpClient: HttpClient) {
             call.respond(HttpStatusCode.NotFound, "User with id ${it.id} not found")
         }
         val sales = httpClient.get<List<Sale>>("http://sale-service/sale/user/${it.id}")
-        call.respond(mapOf("user" to user, "sales" to sales))
+        val offers = httpClient.get<List<Offer>>("http://offer-service/offer/user/${it.id}")
+        call.respond(mapOf("user" to user, "sales" to sales, "offers" to offers))
     }
 
     post<ById.Edit> {
@@ -38,9 +40,8 @@ fun Route.user(storage: UserStorage, httpClient: HttpClient) {
 
     post<Create> {
         val offer = call.receive<User>()
-        println("create rq offer $offer")
         val id = storage.create(offer)
-        call.respond(HttpStatusCode.OK, "Offer id $id")
+        call.respond(HttpStatusCode.OK, "User id $id")
     }
 }
 

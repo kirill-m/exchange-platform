@@ -1,7 +1,7 @@
 POST http://localhost:9090/user/new
 Content-Type: application/json
 
-{ "email":"m@mail.ru", "name":"Alex", "city":"Moscow" }
+{ "email":"mdsd@mail.ru", "name":"Matvey", "city":"SPB" }
 
 ###
 GET http://localhost:9090/user/2

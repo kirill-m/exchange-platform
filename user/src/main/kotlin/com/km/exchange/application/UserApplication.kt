@@ -27,11 +27,11 @@ fun Application.main() {
         .address("localhost")
         .port(port.toInt())
         .build()
-    Consul.builder().withUrl("http://localhost:8500").build().agentClient().register(service)
+    Consul.builder().withUrl(consulUrlProp).build().agentClient().register(service)
 
     val httpClient = HttpClient(Apache) {
         install(ConsulFeature) {
-            consulUrl = "http://localhost:8500"
+            consulUrl = consulUrlProp
         }
         install(JsonFeature)
     }
@@ -47,5 +47,5 @@ fun Application.main() {
     }
 }
 
-@KtorExperimentalAPI
 val Application.port get() = environment.config.property("ktor.deployment.port").getString()
+val Application.consulUrlProp get() = environment.config.property("consul.url").getString()

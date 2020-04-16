@@ -17,13 +17,13 @@ import io.ktor.util.KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 fun Application.main() {
     val storage = H2SaleStorage(/*JDBCConnection.Companion.create(H2Dialect, pool)*/)
-    val service = ImmutableRegistration.builder()
+    val registration = ImmutableRegistration.builder()
         .id("sale-$port")
         .name("sale-service")
         .address("localhost")
         .port(port.toInt())
         .build()
-    Consul.builder().withUrl("http://localhost:8500").build().agentClient().register(service)
+    Consul.builder().withUrl(consulUrlProp).build().agentClient().register(registration)
 
     install(ContentNegotiation) {
         gson {  }
@@ -35,5 +35,5 @@ fun Application.main() {
     }
 }
 
-@KtorExperimentalAPI
 val Application.port get() = environment.config.property("ktor.deployment.port").getString()
+val Application.consulUrlProp get() = environment.config.property("consul.url").getString()

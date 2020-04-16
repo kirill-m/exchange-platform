@@ -26,7 +26,7 @@ dependencies {
     implementation group: 'io.ktor', name: 'ktor-client-apache', version: "$ktor_version"
     implementation group: 'io.ktor', name: 'ktor-client-json', version: "$ktor_version"
     implementation group: 'io.ktor', name: 'ktor-client-jackson', version: "$ktor_version"
-    implementation group: 'com.orbitz.consul', name: 'consul-client', version: "1.4.2"
+    implementation group: 'com.orbitz.consul', name: 'consul-client', version: "$consul_version"
 
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
