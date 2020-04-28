@@ -4,7 +4,7 @@ Content-Type: application/json
 { "email":"mdsd@mail.ru", "name":"Matvey", "city":"SPB" }
 
 ###
-GET http://localhost:9090/user/2
+GET http://localhost:9090/user/1
 Accept: application/json
 
 ###

@@ -2,3 +2,5 @@ rootProject.name = 'exchange-platform'
 
 include "backend", "frontend"
 include 'sale', 'offer', 'user'
+include 'gateway'
+
